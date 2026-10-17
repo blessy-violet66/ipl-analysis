@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IPL 2025 Analytics</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js loaded from a CDN (no install or API key needed) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ===== Header + navigation ===== -->
+  <header class="site-header">
+    <h1 class="logo">🏏 IPL 2025 Analytics</h1>
+    <nav aria-label="Main">
+      <a href="#overview">Overview</a>
+      <a href="#teams">Teams</a>
+      <a href="#batting">Batting</a>
+      <a href="#bowling">Bowling</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ===== Player search ===== -->
+    <section aria-label="Player search">
+      <div class="card">
+        <label for="player-search">Search players</label><br>
+        <input type="search" id="player-search" placeholder="Try Kohli, Boult or GT">
+        <p class="hint">Searches the top 5 run scorers and top 5 wicket takers shown on this page.</p>
+        <div id="search-results" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ===== 1. Season overview ===== -->
+    <section id="overview">
+      <h2>Season Overview</h2>
+      <p class="section-note">The 18th season of the Indian Premier League.</p>
+      <div class="grid stats-grid">
+        <div class="card stat"><div class="icon">📅</div><div class="label">Total matches</div><div class="value">74</div></div>
+        <div class="card stat"><div class="icon">👥</div><div class="label">Teams</div><div class="value">10</div></div>
+        <div class="card stat"><div class="icon">🏆</div><div class="label">Champions</div><div class="value">Royal Challengers Bengaluru</div></div>
+        <div class="card stat"><div class="icon">🟠</div><div class="label">Orange Cap</div><div class="value">B. Sai Sudharsan</div><div class="sub">759 runs</div></div>
+        <div class="card stat"><div class="icon">🟣</div><div class="label">Purple Cap</div><div class="value">Prasidh Krishna</div><div class="sub">25 wickets</div></div>
+      </div>
+    </section>
+
+    <!-- ===== 2. Team performance ===== -->
+    <section id="teams">
+      <h2>Team Performance</h2>
+      <p class="section-note">
+        League stage only (70 matches); the 4 playoff games make up the rest of the 74.
+        A win earns 2 points and a no-result earns 1. Three league matches had no result.
+        The season was suspended on 9 May and resumed on 17 May, the final moved from 25 May to 3 June,
+        and the abandoned Punjab Kings vs Delhi Capitals match (8 May) was replayed on 24 May.
+        Red edge = top four (reached the playoffs).
+      </p>
+      <div class="grid two-col">
+        <div class="card">
+          <h3>Final league table</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Team</th><th class="num">M</th><th class="num">W</th><th class="num">L</th><th class="num">NR</th><th class="num">Pts</th><th class="num">NRR</th></tr>
+              </thead>
+              <tbody id="team-table"></tbody>
+            </table>
+          </div>
+          <p class="hint">M = matches played, NR = no result, NRR = net run rate.</p>
+        </div>
+
+        <div class="card">
+          <h3 id="team-chart-title">Wins by team</h3>
+          <div class="controls">
+            <label for="team-select">Team:</label>
+            <select id="team-select"></select>
+          </div>
+          <div class="chart-box"><canvas id="team-chart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3. Batting ===== -->
+    <section id="batting">
+      <h2>Batting Analysis</h2>
+      <p class="section-note">Top five run scorers of the season.</p>
+      <div class="grid two-col">
+        <div class="card">
+          <h3>Top 5 run scorers</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Player</th><th>Team</th><th class="num">Runs</th><th class="num">Strike rate</th></tr></thead>
+              <tbody id="batting-table"></tbody>
+            </table>
+          </div>
+          <p class="hint">Strike rates are rounded to one decimal place.</p>
+        </div>
+        <div class="card">
+          <h3>Runs comparison</h3>
+          <div class="chart-box"><canvas id="batting-chart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4. Bowling ===== -->
+    <section id="bowling">
+      <h2>Bowling Analysis</h2>
+      <p class="section-note">Top five wicket takers of the season.</p>
+      <div class="grid two-col">
+        <div class="card">
+          <h3>Top 5 wicket takers</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Player</th><th>Team</th><th class="num">Wickets</th></tr></thead>
+              <tbody id="bowling-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Wickets comparison</h3>
+          <div class="chart-box"><canvas id="bowling-chart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5. Match insights ===== -->
+    <section id="insights">
+      <h2>Match Insights</h2>
+      <div class="grid facts-grid">
+        <div class="card fact"><h3>Highest team score</h3><div class="big">286/6</div><p>Sunrisers Hyderabad vs Rajasthan Royals, Hyderabad, 23 March.</p></div>
+        <div class="card fact"><h3>Closest finish by runs</h3><div class="big">1 run</div><p>Kolkata Knight Riders (206/4) beat Rajasthan Royals (205/8) at Eden Gardens, 4 May.</p></div>
+        <div class="card fact"><h3>Final result</h3><div class="big">RCB won by 6 runs</div><p>RCB 190/9 beat Punjab Kings 184/7 in Ahmedabad on 3 June. Player of the Match: Krunal Pandya (2/17).</p></div>
+        <div class="card fact"><h3>Top run scorer</h3><div class="big">759 runs</div><p>B. Sai Sudharsan (Gujarat Titans).</p></div>
+        <div class="card fact"><h3>Top wicket taker</h3><div class="big">25 wickets</div><p>Prasidh Krishna (Gujarat Titans).</p></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>Data: final IPL 2025 league table, Orange/Purple Cap tables and match reports (ESPNcricinfo, IPL).</footer>
+
+  <script>
+    // =====================================================
+    // 1. DATA - all statistics live here (final 2025 season)
+    // =====================================================
+
+    // League stage, in final table order. nr = no result, pts = points, nrr = net run rate
+    const teams = [
+      { name: "Punjab Kings",                short: "PBKS", played: 14, won: 9, lost: 4,  nr: 1, pts: 19, nrr: 0.372 },
+      { name: "Royal Challengers Bengaluru", short: "RCB",  played: 14, won: 9, lost: 4,  nr: 1, pts: 19, nrr: 0.301 },
+      { name: "Gujarat Titans",              short: "GT",   played: 14, won: 9, lost: 5,  nr: 0, pts: 18, nrr: 0.254 },
+      { name: "Mumbai Indians",              short: "MI",   played: 14, won: 8, lost: 6,  nr: 0, pts: 16, nrr: 1.142 },
+      { name: "Delhi Capitals",              short: "DC",   played: 14, won: 7, lost: 6,  nr: 1, pts: 15, nrr: 0.011 },
+      { name: "Sunrisers Hyderabad",         short: "SRH",  played: 14, won: 6, lost: 7,  nr: 1, pts: 13, nrr: -0.241 },
+      { name: "Lucknow Super Giants",        short: "LSG",  played: 14, won: 6, lost: 8,  nr: 0, pts: 12, nrr: -0.376 },
+      { name: "Kolkata Knight Riders",       short: "KKR",  played: 14, won: 5, lost: 7,  nr: 2, pts: 12, nrr: -0.305 },
+      { name: "Rajasthan Royals",            short: "RR",   played: 14, won: 4, lost: 10, nr: 0, pts: 8,  nrr: -0.549 },
+      { name: "Chennai Super Kings",         short: "CSK",  played: 14, won: 4, lost: 10, nr: 0, pts: 8,  nrr: -0.647 }
+    ];
+
+    // Top 5 run scorers
+    const batters = [
+      { name: "B. Sai Sudharsan", team: "Gujarat Titans",              short: "GT",   runs: 759, sr: 156.2 },
+      { name: "Suryakumar Yadav", team: "Mumbai Indians",              short: "MI",   runs: 717, sr: 167.9 },
+      { name: "Virat Kohli",      team: "Royal Challengers Bengaluru", short: "RCB",  runs: 657, sr: 144.7 },
+      { name: "Shubman Gill",     team: "Gujarat Titans",              short: "GT",   runs: 650, sr: 155.9 },
+      { name: "Mitchell Marsh",   team: "Lucknow Super Giants",        short: "LSG",  runs: 627, sr: 163.7 }
+    ];
+
+    // Top 5 wicket takers
+    const bowlers = [
+      { name: "Prasidh Krishna", team: "Gujarat Titans",              short: "GT",   wickets: 25 },
+      { name: "Noor Ahmad",      team: "Chennai Super Kings",         short: "CSK",  wickets: 24 },
+      { name: "Josh Hazlewood",  team: "Royal Challengers Bengaluru", short: "RCB",  wickets: 22 },
+      { name: "Trent Boult",     team: "Mumbai Indians",              short: "MI",   wickets: 22 },
+      { name: "Arshdeep Singh",  team: "Punjab Kings",                short: "PBKS", wickets: 21 }
+    ];
+
+    // Chart colours
+    const RED = "#d7263d", NAVY = "#16244d", GREY = "#aab3c8";
+
+    // =====================================================
+    // 2. TABLES - build the table rows from the data above
+    // =====================================================
+
+    // Team table (first 4 rows get the "top4" class)
+    document.getElementById("team-table").innerHTML = teams.map((t, i) => `
+      <tr class="${i < 4 ? "top4" : ""}" data-team="${t.name}">
+        <td>${i + 1}</td><td>${t.name}</td>
+        <td class="num">${t.played}</td><td class="num">${t.won}</td><td class="num">${t.lost}</td>
+        <td class="num">${t.nr}</td><td class="num">${t.pts}</td>
+        <td class="num">${t.nrr > 0 ? "+" : ""}${t.nrr.toFixed(3)}</td>
+      </tr>`).join("");
+
+    // Batting table - the first player is the Orange Cap holder
+    document.getElementById("batting-table").innerHTML = batters.map((b, i) => `
+      <tr class="${i === 0 ? "highlight" : ""}">
+        <td>${i + 1}</td>
+        <td>${b.name}${i === 0 ? '<span class="badge">Orange Cap</span>' : ""}</td>
+        <td>${b.short}</td><td class="num">${b.runs}</td><td class="num">${b.sr.toFixed(1)}</td>
+      </tr>`).join("");
+
+    // Bowling table - the first player is the Purple Cap holder
+    document.getElementById("bowling-table").innerHTML = bowlers.map((b, i) => `
+      <tr class="${i === 0 ? "highlight" : ""}">
+        <td>${i + 1}</td>
+        <td>${b.name}${i === 0 ? '<span class="badge">Purple Cap</span>' : ""}</td>
+        <td>${b.short}</td><td class="num">${b.wickets}</td>
+      </tr>`).join("");
+
+    // =====================================================
+    // 3. CHARTS
+    // =====================================================
+
+    // --- Team chart + dropdown filter ---
+    const select = document.getElementById("team-select");
+    select.innerHTML = '<option value="all">All teams</option>' +
+      teams.map(t => `<option value="${t.name}">${t.name}</option>`).join("");
+
+    const teamChart = new Chart(document.getElementById("team-chart"), {
+      type: "bar",
+      data: { labels: [], datasets: [{ label: "", data: [], backgroundColor: [] }] },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+      }
+    });
+
+    // Redraws the chart for "all" teams or for one chosen team
+    function updateTeamChart() {
+      const choice = select.value;
+      const title = document.getElementById("team-chart-title");
+
+      if (choice === "all") {
+        title.textContent = "Wins by team (league stage)";
+        teamChart.data.labels = teams.map(t => t.short);
+        teamChart.data.datasets[0].label = "Wins";
+        teamChart.data.datasets[0].data = teams.map(t => t.won);
+        teamChart.data.datasets[0].backgroundColor = RED;
+      } else {
+        const t = teams.find(team => team.name === choice);
+        title.textContent = t.name + " – league record";
+        teamChart.data.labels = ["Wins", "Losses", "No result"];
+        teamChart.data.datasets[0].label = t.name;
+        teamChart.data.datasets[0].data = [t.won, t.lost, t.nr];
+        teamChart.data.datasets[0].backgroundColor = [RED, NAVY, GREY];
+      }
+      teamChart.update();
+
+      // Highlight the chosen team in the table
+      document.querySelectorAll("#team-table tr").forEach(row => {
+        row.classList.toggle("highlight", row.dataset.team === choice);
+      });
+    }
+    select.addEventListener("change", updateTeamChart);
+    updateTeamChart();
+
+    // --- Batting chart (horizontal bars, Sai Sudharsan in red) ---
+    new Chart(document.getElementById("batting-chart"), {
+      type: "bar",
+      data: {
+        labels: batters.map(b => b.name),
+        datasets: [{ label: "Runs", data: batters.map(b => b.runs),
+                     backgroundColor: batters.map((b, i) => i === 0 ? RED : NAVY) }]
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true } }
+      }
+    });
+
+    // --- Bowling chart (Prasidh Krishna in red) ---
+    new Chart(document.getElementById("bowling-chart"), {
+      type: "bar",
+      data: {
+        labels: bowlers.map(b => b.name),
+        datasets: [{ label: "Wickets", data: bowlers.map(b => b.wickets),
+                     backgroundColor: bowlers.map((b, i) => i === 0 ? RED : NAVY) }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+      }
+    });
+
+    // =====================================================
+    // 4. PLAYER SEARCH
+    // =====================================================
+
+    // One combined list so a single search covers batters and bowlers
+    const allPlayers = [
+      ...batters.map(b => ({ name: b.name, team: b.team, short: b.short, detail: `${b.runs} runs, strike rate ${b.sr.toFixed(1)}` })),
+      ...bowlers.map(b => ({ name: b.name, team: b.team, short: b.short, detail: `${b.wickets} wickets` }))
+    ];
+
+    const searchBox = document.getElementById("player-search");
+    const results = document.getElementById("search-results");
+
+    searchBox.addEventListener("input", () => {
+      const query = searchBox.value.trim().toLowerCase();
+      results.innerHTML = "";               // clear old results
+      if (query === "") return;             // empty box = show nothing
+
+      // Match on player name, team name or team short name
+      const matches = allPlayers.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.team.toLowerCase().includes(query) ||
+        p.short.toLowerCase() === query);
+
+      if (matches.length === 0) {
+        // textContent keeps whatever the user typed safe
+        const msg = document.createElement("p");
+        msg.className = "empty";
+        msg.textContent = `No players found for "${searchBox.value.trim()}". Try a name from the top-5 lists, like Kohli or Boult.`;
+        results.appendChild(msg);
+        return;
+      }
+
+      matches.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "result";
+        div.innerHTML = `<strong>${p.name}</strong> <span>${p.team} · ${p.detail}</span>`;
+        results.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>

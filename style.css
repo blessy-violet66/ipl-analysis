@@ -1,0 +1,158 @@
+/* ===== IPL 2025 Analytics - styles ===== */
+
+/* Colours live in variables so they are easy to change */
+:root {
+  --navy: #0b1530;
+  --navy-light: #16244d;
+  --red: #d7263d;
+  --card: #ffffff;
+  --text: #14213d;
+  --muted: #5b6578;
+  --line: #e4e8f0;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* keeps headings visible below the sticky header */
+}
+
+body {
+  margin: 0;
+  background: var(--navy);
+  color: #fff;
+  font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* ----- Header and navigation ----- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: 12px 24px;
+  background: var(--navy-light);
+  border-bottom: 3px solid var(--red);
+}
+
+.logo { margin: 0; font-size: 1.3rem; }
+
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+
+nav a {
+  color: #cfd6e8;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+}
+
+nav a:hover, nav a:focus-visible { background: var(--red); color: #fff; outline: none; }
+
+/* ----- Page layout ----- */
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 40px; }
+
+section { margin-bottom: 40px; }
+
+h2 { margin: 0 0 6px; font-size: 1.5rem; border-left: 4px solid var(--red); padding-left: 10px; }
+
+.section-note { color: #b9c3dc; margin: 0 0 16px; font-size: 0.95rem; }
+
+/* ----- Cards ----- */
+.card {
+  background: var(--card);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 18px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35); }
+
+.card h3 { margin: 0 0 10px; font-size: 1.05rem; }
+
+.grid { display: grid; gap: 14px; }
+.stats-grid { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.facts-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.two-col { grid-template-columns: 1fr; }
+
+@media (min-width: 900px) {
+  .two-col { grid-template-columns: 1.1fr 1fr; align-items: start; }
+}
+
+.stat .icon { font-size: 1.6rem; }
+.stat .label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+.stat .value { font-size: 1.15rem; font-weight: 700; }
+.stat .sub { color: var(--red); font-weight: 600; font-size: 0.9rem; }
+
+.fact .big { font-size: 1.4rem; font-weight: 700; color: var(--red); }
+.fact p { margin: 4px 0 0; color: var(--muted); font-size: 0.9rem; }
+
+/* ----- Tables ----- */
+.table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { color: var(--muted); font-weight: 600; font-size: 0.82rem; }
+td.num, th.num { text-align: right; }
+
+tr.highlight td { background: #fdecef; font-weight: 600; }
+tr.top4 td:first-child { border-left: 3px solid var(--red); }
+
+.badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* ----- Charts ----- */
+.chart-box { position: relative; height: 300px; }
+
+/* ----- Form controls ----- */
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
+
+label { font-weight: 600; font-size: 0.9rem; }
+
+select, input[type="search"] {
+  padding: 9px 12px;
+  border: 1px solid #c5cde0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+  min-width: 0;
+}
+
+input[type="search"] { width: 100%; max-width: 420px; }
+
+select:focus-visible, input:focus-visible { outline: 3px solid var(--red); outline-offset: 1px; }
+
+.hint { color: var(--muted); font-size: 0.85rem; margin: 8px 0 0; }
+
+/* ----- Search results ----- */
+#search-results { margin-top: 12px; }
+.result { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.result:last-child { border-bottom: none; }
+.result span { color: var(--muted); font-size: 0.9rem; }
+.empty { color: var(--red); font-weight: 600; margin: 0; }
+
+footer { text-align: center; color: #8f9bb8; font-size: 0.85rem; padding: 0 16px 28px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .card { transition: none; }
+  .card:hover { transform: none; }
+}
